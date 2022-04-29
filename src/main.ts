@@ -7,7 +7,7 @@ interface cartItem {
   price: number;
   qty: number;
 }
-const cart: cartItem[] = [];
+let cart: cartItem[] = [];
 
 const cards = document.getElementById('cards') as HTMLDivElement | null;
 const cardTableBodyEl =
@@ -74,6 +74,8 @@ function buyDelete(event: Event): void {
 
 // 2.1. Susikuriam masyva cart. jis tures objektus {title: , price: , qty: 1}. paspaudus buy, ikeliam ta preke i cart masyva.
 
+const pwm = document.getElementById('pwm');
+
 function addItemToCart(itemId: number): void {
   const found: ItemObj | undefined = items.find(
     (iObj: ItemObj): boolean => iObj.id === itemId
@@ -83,6 +85,7 @@ function addItemToCart(itemId: number): void {
   const itemInCart: cartItem | undefined = cart.find(
     (obj): boolean => obj.itemId === found.id
   );
+
   if (itemInCart) {
     itemInCart.qty++;
   } else {
@@ -95,8 +98,13 @@ function addItemToCart(itemId: number): void {
     };
     cart.push(itemToCart);
   }
+
   drawCartItems(cart, cardTableBodyEl);
   if (drawTotal) drawTotal.textContent = calculateTotal(cart);
+  if (pwm)
+    pwm.textContent = (Number(calculateTotal(cart)) * 0.21)
+      .toFixed(2)
+      .toString();
 }
 
 function drawCartItems(
