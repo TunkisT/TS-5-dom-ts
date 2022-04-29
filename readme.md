@@ -20,7 +20,7 @@
 
 9. Vietoj li elementu sugeneruoti korteles su paveiksleliais [mazdaug tokias](https://prnt.sc/fKmiy264NYT5)
 
-10. prideti buy mygtuka prie korteliu, padaryti kad veiktu
+10. + prideti buy mygtuka prie korteliu, padaryti kad veiktu
 
 11. po to kai sugeneruojam lentele. Paspaudus ant qty lauko isrikiuojam eilutes pagal qty. paspaudus dar karta keiciasi desc => asc ir atvirksciai
 

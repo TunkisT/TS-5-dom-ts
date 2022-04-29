@@ -1,15 +1,24 @@
 // 1d. Sugeneruoti items ul elemente li elementus su prekiu pavadinimu ir kaina ir mygtuku buy
 
 import { ItemObj, items } from './data/db.js';
+interface cartItem {
+  itemId: number;
+  title: string;
+  price: number;
+  qty: number;
+}
+const cart: cartItem[] = [];
 
 const cards = document.getElementById('cards') as HTMLDivElement | null;
+const cardTableBodyEl =
+  (document.getElementById('card-body') as HTMLTableSectionElement) || null;
 
 function makeLiEl(id: number, title: string, price: number): HTMLDivElement {
   const card = document.createElement('div');
   card.innerHTML = `<img class='image' src="https://picsum.photos/200/300">`;
   card.classList.add('card');
   const strongEl = document.createElement('h2');
-  strongEl.textContent = title.slice(0, 12) // + ' --- ' + id;
+  strongEl.textContent = title.slice(0, 12); // + ' --- ' + id;
   card.appendChild(strongEl);
 
   card.append(` Price: ${price}$ `);
@@ -35,7 +44,7 @@ function makelShopList(arr: ItemObj[]): void {
     cards?.appendChild(card);
   });
 }
-makelShopList(items);
+makelShopList(items.slice(0, 6));
 
 const btnEl = document.getElementById('sort-price') as HTMLButtonElement | null;
 btnEl?.addEventListener('click', sortByPrice);
@@ -54,8 +63,6 @@ function sortByPrice(): void {
 // 2. pasaudus mygtuka buy nuperkam preke. Tai reiskia pasalinam ja is saraso.
 function buyDelete(event: Event): void {
   const delBtnEl = event.currentTarget as HTMLButtonElement | null;
-  console.log('buy');
-  console.log(delBtnEl);
   if (!delBtnEl) throw new Error('delBtnEl el neradau');
   // addto cart
   // ! patvirtinam kad yra tokia reiksme.
@@ -64,23 +71,16 @@ function buyDelete(event: Event): void {
   // delBtnEl.parentElement?.remove();
   // (<HTMLButtonElement | null>event.currentTarget)?.parentElement?.remove();
 }
-interface cartItem {
-  itemId: number;
-  title: string;
-  price: number;
-  qty: number;
-}
-const cart: cartItem[] = [];
+
 // 2.1. Susikuriam masyva cart. jis tures objektus {title: , price: , qty: 1}. paspaudus buy, ikeliam ta preke i cart masyva.
+
 function addItemToCart(itemId: number): void {
   const found: ItemObj | undefined = items.find(
     (iObj: ItemObj): boolean => iObj.id === itemId
   );
-  console.log('found ===', found);
   if (!found) return;
 
   const { id, title, price } = found;
-
   const itemToCart: cartItem = {
     itemId: id,
     title,
@@ -89,30 +89,23 @@ function addItemToCart(itemId: number): void {
   };
   cart.push(itemToCart);
   console.log('cart ===', cart);
+  drawCartItems(cart, cardTableBodyEl);
 }
 
-// pagalvoti kur iskviesti addItemToCart() kad veiktu su buy mygtuku
-// ko truksta kad veiktu su buy mygtuku
-[1, 2, 3].includes(1);
-const psiaudoCart = [
-  {
-    id: 1,
-    title: 'yes',
-    qty: 1,
-  },
-  {
-    id: 2,
-    title: 'maybe',
-    qty: 1,
-  },
-  {
-    id: 3,
-    title: 'no',
-    qty: 1,
-  },
-];
-psiaudoCart.push({
-  id: 1,
-  title: 'yes',
-  qty: 1,
-});
+function drawCartItems(
+  cart: cartItem[],
+  dest: HTMLTableSectionElement | null
+): void {
+  if (!dest) throw new Error('table body not found');
+  dest.innerHTML = '';
+
+  cart.forEach((obj: cartItem, idx: number): void => {
+    const trEl: HTMLTableRowElement = dest?.insertRow();
+    trEl.innerHTML = `
+    <td>${idx + 1}</td>
+    <td>${obj.title}</td>
+    <td>${obj.price}</td>
+    <td>${obj.qty}</td>
+    `;
+  });
+}
