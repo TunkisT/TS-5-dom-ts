@@ -12,7 +12,7 @@ const cart: cartItem[] = [];
 const cards = document.getElementById('cards') as HTMLDivElement | null;
 const cardTableBodyEl =
   (document.getElementById('card-body') as HTMLTableSectionElement) || null;
-
+const drawTotal = document.getElementById('total') as HTMLHeadingElement | null;
 function makeLiEl(id: number, title: string, price: number): HTMLDivElement {
   const card = document.createElement('div');
   card.innerHTML = `<img class='image' src="https://picsum.photos/200/300">`;
@@ -80,16 +80,23 @@ function addItemToCart(itemId: number): void {
   );
   if (!found) return;
 
-  const { id, title, price } = found;
-  const itemToCart: cartItem = {
-    itemId: id,
-    title,
-    price,
-    qty: 1,
-  };
-  cart.push(itemToCart);
-  console.log('cart ===', cart);
+  const itemInCart: cartItem | undefined = cart.find(
+    (obj): boolean => obj.itemId === found.id
+  );
+  if (itemInCart) {
+    itemInCart.qty++;
+  } else {
+    const { id, title, price } = found;
+    const itemToCart: cartItem = {
+      itemId: id,
+      title,
+      price,
+      qty: 1,
+    };
+    cart.push(itemToCart);
+  }
   drawCartItems(cart, cardTableBodyEl);
+  if (drawTotal) drawTotal.textContent = calculateTotal(cart);
 }
 
 function drawCartItems(
@@ -98,7 +105,6 @@ function drawCartItems(
 ): void {
   if (!dest) throw new Error('table body not found');
   dest.innerHTML = '';
-
   cart.forEach((obj: cartItem, idx: number): void => {
     const trEl: HTMLTableRowElement = dest?.insertRow();
     trEl.innerHTML = `
@@ -108,4 +114,12 @@ function drawCartItems(
     <td>${obj.qty}</td>
     `;
   });
+}
+
+function calculateTotal(cartArr: cartItem[]): string {
+  const totalSum = cartArr.reduce((total: number, cObj: cartItem) => {
+    return (total += cObj.qty * cObj.price);
+  }, 0);
+  console.log('totalSum ===', totalSum.toFixed(2));
+  return totalSum.toFixed(2);
 }
