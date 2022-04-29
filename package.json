@@ -1,0 +1,21 @@
+{
+  "name": "ts-5-dom-ts",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "start": "tsc -w"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/MariusCodeAcademy/type5-TS-5-dom-ts.git"
+  },
+  "keywords": [],
+  "author": "Marius K.",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/MariusCodeAcademy/type5-TS-5-dom-ts/issues"
+  },
+  "homepage": "https://github.com/MariusCodeAcademy/type5-TS-5-dom-ts#readme"
+}
